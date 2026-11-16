@@ -3,63 +3,459 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>莎翁劇場詞彙沙龍 | Shakespearean Lexicon A–Z</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>The Bard's Lexicon · 莎士比亞文學沙龍</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500;1,700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --parchment-light: #fbf7ef;
+      --parchment-mid: #f3ead8;
+      --parchment-edge: #e4d5b7;
+      --ink-primary: #1f1714;
+      --ink-secondary: #54433a;
+      --gold-bright: #dfc07b;
+      --gold-antique: #b0893e;
+      --gold-deep: #7a591d;
+      --crimson-accent: #781d2b;
+      --shadow-museum: 0 22px 55px rgba(0, 0, 0, 0.65), 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 12%, #3a1820 0%, #1d0d11 58%, #0f0608 100%);
+      color: var(--ink-primary);
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .ambient-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.52) 100%);
+      z-index: 1;
+    }
+
+    /* 緊湊典雅頁首，確保一頁全覽 */
+    .salon-header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 1.1rem 1rem 0.6rem;
+    }
+
+    .salon-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.32em;
+      color: var(--gold-bright);
+      opacity: 0.85;
+      margin-bottom: 0.15rem;
+    }
+
+    .salon-title {
+      font-family: 'Cinzel Decorative', 'Cinzel', serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #f5e3b3 0%, #d4af63 45%, #f2dca6 70%, #9e7832 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.55));
+    }
+
+    .salon-desc {
+      font-size: 0.88rem;
+      letter-spacing: 0.16em;
+      color: #e6d7be;
+      opacity: 0.88;
+      margin-top: 0.1rem;
+    }
+
+    /* 單排 A–Z 黃銅導覽列 */
+    .alphabet-nav {
+      position: relative;
+      z-index: 2;
+      max-width: 1120px;
+      margin: 0.45rem auto 1rem;
+      padding: 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+
+    .alphabet-nav button {
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      border: 1px solid rgba(223, 192, 123, 0.35);
+      background: rgba(24, 11, 14, 0.68);
+      color: #e7d8be;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+
+    .alphabet-nav button:hover {
+      border-color: var(--gold-bright);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(212, 175, 99, 0.35);
+    }
+
+    .alphabet-nav button.active {
+      background: linear-gradient(145deg, #e3c47e, #a87e33);
+      color: #1a0f0a;
+      border-color: #fff1cc;
+      font-weight: 700;
+      transform: scale(1.14);
+      box-shadow: 0 0 14px rgba(223, 192, 123, 0.6);
+    }
+
+    /* 主舞台與左右翻頁按鍵容器 */
+    .salon-stage {
+      position: relative;
+      z-index: 2;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 3.6rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 皇家黃銅翻頁箭頭 */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(223, 192, 123, 0.55);
+      background: linear-gradient(145deg, rgba(46, 20, 26, 0.92), rgba(20, 9, 12, 0.95));
+      color: var(--gold-bright);
+      font-family: 'Cinzel', serif;
+      font-size: 1.45rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      transition: all 0.25s ease;
+      z-index: 5;
+    }
+
+    .nav-arrow:hover {
+      background: linear-gradient(145deg, #e3c47e, #a87e33);
+      color: #1a0f0a;
+      border-color: #fff1cc;
+      box-shadow: 0 0 18px rgba(223, 192, 123, 0.55);
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .nav-prev { left: 0.6rem; }
+    .nav-next { right: 0.6rem; }
+
+    /* 典藏羊皮紙對開本卡片 */
+    .folio-card {
+      width: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.78), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(196, 172, 130, 0.35), transparent 65%),
+        linear-gradient(160deg, var(--parchment-light) 0%, var(--parchment-mid) 60%, var(--parchment-edge) 100%);
+      border-radius: 6px;
+      padding: 1.85rem 2.2rem;
+      box-shadow: var(--shadow-museum);
+      border: 1px solid rgba(176, 137, 62, 0.65);
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.92fr 1.18fr;
+      gap: 2.1rem;
+      align-items: center;
+      animation: folioFadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .folio-card::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(176, 137, 62, 0.42);
+      pointer-events: none;
+    }
+
+    @keyframes folioFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 立體金箔油畫框 */
+    .painting-frame {
+      position: relative;
+      padding: 11px;
+      background: linear-gradient(145deg, #c9a354, #7d5b1e 50%, #b58d3d);
+      border-radius: 3px;
+      box-shadow:
+        0 14px 28px rgba(28, 17, 10, 0.42),
+        inset 0 1px 2px rgba(255, 245, 214, 0.75),
+        inset 0 -2px 4px rgba(45, 30, 8, 0.7);
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    .painting-frame::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(255, 238, 194, 0.55);
+      pointer-events: none;
+    }
+
+    .painting-frame img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border: 2px solid #2b1d12;
+      transition: transform 0.6s ease;
+    }
+
+    .painting-frame:hover img {
+      transform: scale(1.02);
+    }
+
+    /* 右側文學排版 */
+    .word-letter-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--crimson-accent);
+      font-weight: 700;
+      margin-bottom: 0.15rem;
+    }
+
+    .word-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.85rem, 3vw, 2.45rem);
+      font-weight: 700;
+      color: var(--ink-primary);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    .phonetic {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.08rem;
+      color: var(--ink-secondary);
+      margin: 0.15rem 0 0.6rem;
+    }
+
+    .meaning-zh {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2f221b;
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(176, 137, 62, 0.38);
+    }
+
+    .quote-block {
+      position: relative;
+      padding: 0.85rem 1.1rem;
+      background: rgba(176, 137, 62, 0.08);
+      border-left: 3px solid var(--crimson-accent);
+      margin-bottom: 1rem;
+    }
+
+    .quote-en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.24rem;
+      font-style: italic;
+      font-weight: 600;
+      color: #1c120e;
+      line-height: 1.42;
+    }
+
+    .quote-en::first-letter {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.05rem;
+      font-weight: 700;
+      color: var(--crimson-accent);
+      float: left;
+      line-height: 0.88;
+      padding-right: 0.4rem;
+      padding-top: 0.08rem;
+    }
+
+    .quote-zh {
+      margin-top: 0.4rem;
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+    }
+
+    .quote-source {
+      margin-top: 0.3rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      color: var(--gold-deep);
+      text-align: right;
+    }
+
+    /* 雙音軌與底部翻頁按鈕區 */
+    .audio-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .audio-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 0.62rem 1rem;
+      border-radius: 3px;
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .btn-word {
+      background: linear-gradient(145deg, #7d1e2d, #52101a);
+      color: #f7e6c4;
+      border: 1px solid #b58d3d;
+      box-shadow: 0 5px 14px rgba(82, 16, 26, 0.28);
+    }
+
+    .btn-word:hover {
+      background: linear-gradient(145deg, #942436, #631420);
+      transform: translateY(-2px);
+    }
+
+    .btn-quote {
+      background: rgba(255, 252, 245, 0.8);
+      color: var(--ink-primary);
+      border: 1px solid var(--gold-antique);
+    }
+
+    .btn-quote:hover {
+      background: #fff;
+      border-color: var(--crimson-accent);
+      color: var(--crimson-accent);
+      transform: translateY(-2px);
+    }
+
+    .playing {
+      box-shadow: 0 0 0 3px rgba(212, 175, 99, 0.6) !important;
+      border-color: #d4af63 !important;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        justify-content: flex-start;
+      }
+      .salon-stage {
+        padding: 0 1rem 2.5rem;
+        flex-direction: column;
+      }
+      .folio-card {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1.2rem;
+        gap: 1.3rem;
+      }
+      .nav-arrow {
+        position: static;
+        transform: none;
+        width: 40px;
+        height: 40px;
+      }
+      .nav-arrow:hover {
+        transform: scale(1.06);
+      }
+      .mobile-page-controls {
+        display: flex;
+        gap: 1.2rem;
+        margin-top: 1rem;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .mobile-page-controls {
+        display: contents;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="salon-wrapper">
-    <header class="salon-header">
-      <p class="subtitle">THE GLOBE SALON · A–Z LEXICON</p>
-      <h1>莎士比亞劇場詞彙沙龍</h1>
-      <p class="desc">一幅印象派光影，一則經典詞彙與劇本金句</p>
-      <nav id="alphabet-nav" class="alphabet-nav" aria-label="A 到 Z 字母索引"></nav>
-    </header>
+  <div class="ambient-vignette"></div>
 
-    <main class="exhibit-card">
-      <div class="canvas-frame">
-        <span id="letter-stamp" class="letter-stamp">A</span>
-        <img id="vocab-image" src="" alt="" />
-        <p class="painting-caption" id="painting-caption">Impressionist Oil Study · assets/images/a-archaic.jpg</p>
-      </div>
+  <header class="salon-header">
+    <p class="salon-subtitle">ROYAL LITERARY ARCHIVE · A–Z</p>
+    <h1 class="salon-title">The Bard’s Lexicon</h1>
+    <p class="salon-desc">莎士比亞古典詞彙與印象派畫廊沙龍</p>
+  </header>
 
-      <div class="lexicon-content">
-        <div class="word-header">
-          <div>
-            <h2 id="vocab-word" class="vocab-word">archaic</h2>
-            <p id="vocab-meaning" class="vocab-meaning">古風的、古體的</p>
-          </div>
-          <button id="play-word-btn" class="audio-btn word-audio-btn" type="button" title="播放單字發音">
-            <span class="icon">♪</span> 單字朗讀
-          </button>
-        </div>
+  <nav class="alphabet-nav" id="alphabetNav" aria-label="A-Z 字母索引"></nav>
 
-        <hr class="divider" />
-
-        <div class="quote-section">
-          <blockquote id="vocab-quote" class="vocab-quote">
-            “Thy words are archaic, yet thy passion rings eternal.”
-          </blockquote>
-          <p id="vocab-translation" class="vocab-translation">你的言辭雖帶古風，然情意永恆不朽。</p>
-          <div class="quote-footer">
-            <span id="vocab-source" class="vocab-source">——《十四行詩》意象選句</span>
-            <button id="play-quote-btn" class="audio-btn quote-audio-btn" type="button" title="播放金句朗讀">
-              <span class="icon">▶</span> 金句朗讀
-            </button>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <footer class="salon-controls">
-      <button id="prev-btn" class="step-btn" type="button">← 上一詞彙</button>
-      <span id="counter-text" class="counter-text">01 / 26</span>
-      <button id="next-btn" class="step-btn" type="button">下一詞彙 →</button>
-    </footer>
-  </div>
+  <main class="salon-stage">
+    <article class="folio-card" id="wordCard"></article>
+    <div class="mobile-page-controls">
+      <button type="button" class="nav-arrow nav-prev" id="prevBtn" title="上一個單字 (←)">‹</button>
+      <button type="button" class="nav-arrow nav-next" id="nextBtn" title="下一個單字 (→)">›</button>
+    </div>
+  </main>
 
   <script src="app.js"></script>
+  <script>
+    // 擴充上一頁 / 下一頁與鍵盤左右方向鍵功能
+    (function () {
+      let currentIdx = 0;
+      const total = typeof vocabularyData !== "undefined" ? vocabularyData.length : 26;
+
+      const origRender = window.renderCard;
+      window.renderCard = function (index) {
+        currentIdx = (index + total) % total;
+        origRender(currentIdx);
+      };
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        window.renderCard(currentIdx - 1);
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        window.renderCard(currentIdx + 1);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") window.renderCard(currentIdx - 1);
+        if (e.key === "ArrowRight") window.renderCard(currentIdx + 1);
+      });
+    })();
+  </script>
 </body>
 </html>
