@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>莎翁劇場詞彙沙龍 | Shakespearean Lexicon A–Z</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500;1,700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="salon-wrapper">
+    <header class="salon-header">
+      <p class="subtitle">THE GLOBE SALON · A–Z LEXICON</p>
+      <h1>莎士比亞劇場詞彙沙龍</h1>
+      <p class="desc">一幅印象派光影，一則經典詞彙與劇本金句</p>
+      <nav id="alphabet-nav" class="alphabet-nav" aria-label="A 到 Z 字母索引"></nav>
+    </header>
+
+    <main class="exhibit-card">
+      <div class="canvas-frame">
+        <span id="letter-stamp" class="letter-stamp">A</span>
+        <img id="vocab-image" src="" alt="" />
+        <p class="painting-caption" id="painting-caption">Impressionist Oil Study · assets/images/a-archaic.jpg</p>
+      </div>
+
+      <div class="lexicon-content">
+        <div class="word-header">
+          <div>
+            <h2 id="vocab-word" class="vocab-word">archaic</h2>
+            <p id="vocab-meaning" class="vocab-meaning">古風的、古體的</p>
+          </div>
+          <button id="play-word-btn" class="audio-btn word-audio-btn" type="button" title="播放單字發音">
+            <span class="icon">♪</span> 單字朗讀
+          </button>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="quote-section">
+          <blockquote id="vocab-quote" class="vocab-quote">
+            “Thy words are archaic, yet thy passion rings eternal.”
+          </blockquote>
+          <p id="vocab-translation" class="vocab-translation">你的言辭雖帶古風，然情意永恆不朽。</p>
+          <div class="quote-footer">
+            <span id="vocab-source" class="vocab-source">——《十四行詩》意象選句</span>
+            <button id="play-quote-btn" class="audio-btn quote-audio-btn" type="button" title="播放金句朗讀">
+              <span class="icon">▶</span> 金句朗讀
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="salon-controls">
+      <button id="prev-btn" class="step-btn" type="button">← 上一詞彙</button>
+      <span id="counter-text" class="counter-text">01 / 26</span>
+      <button id="next-btn" class="step-btn" type="button">下一詞彙 →</button>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
