@@ -356,7 +356,6 @@ function renderCard(index) {
   const item = vocabularyData[index];
   const card = document.getElementById("wordCard");
 
-  // 觸發重新進場動畫
   card.style.animation = "none";
   card.offsetHeight;
   card.style.animation = null;
